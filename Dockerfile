@@ -1,10 +1,7 @@
-FROM alpine:latest
+FROM alpine:latest as builder
 
-MAINTAINER unoexperto <unoexperto.support@mailnull.com>
-
-# python is necessary for ssdb-cli
 RUN apk update && \
-    apk add gcc python && \
+    apk add gcc python3 && \
     apk add --virtual .build-deps autoconf make g++ git
 
 RUN mkdir -p /usr/src/ssdb
@@ -24,9 +21,11 @@ RUN sed \
     -e 's@output:.*@output:@' \
     -i /usr/local/ssdb/ssdb.conf
 
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates python3
 EXPOSE 8888
+WORKDIR /usr/local/ssdb/
+COPY --from=builder /usr/local/ssdb    .
 VOLUME /usr/local/ssdb/var/data
 VOLUME /usr/local/ssdb/var/meta
-WORKDIR /usr/local/ssdb/
-
 CMD ["/usr/local/ssdb/ssdb-server", "/usr/local/ssdb/ssdb.conf"]
