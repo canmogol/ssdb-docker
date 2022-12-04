@@ -6,7 +6,7 @@ RUN apk update && \
 
 RUN mkdir -p /usr/src/ssdb
 
-RUN git clone --depth 1 https://github.com/ideawu/ssdb.git /usr/src/ssdb && \
+RUN git clone --depth 1 https://github.com/canmogol/ssdb.git /usr/src/ssdb && \
   make -C /usr/src/ssdb && \
   make -C /usr/src/ssdb install && \
   rm -rf /usr/src/ssdb
